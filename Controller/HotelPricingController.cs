@@ -37,7 +37,11 @@ namespace TravelPricingGateway.Controllers
                     return NotFound(new { Message = $"Hotel '{hotelId}' was not found in our catalog." });
                 }
 
-                var stayPeriod = new DateRange(checkIn, checkOut);
+                if (!DateRange.TryCreate(checkIn, checkOut, out var stayPeriod))
+                {
+                    return BadRequest(new { Error = "CheckOut date must be strictly after CheckIn date." });
+                }
+
                 var request = new HotelSearchRequest(hotelId, stayPeriod, DateTime.UtcNow);
 
                 var result = await _aggregator.GetCheapestPriceAsync(request, cancellationToken);

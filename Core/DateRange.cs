@@ -4,19 +4,28 @@ namespace TravelPricingGateway.Core
 {
     public sealed record DateRange
     {
-        public DateTime CheckIn { get; }
-        public DateTime CheckOut { get; }
+        public DateTime Start { get; }
+        public DateTime End { get; }
 
-        public DateRange(DateTime checkIn, DateTime checkOut)
+        private DateRange(DateTime start, DateTime end)
         {
-            var normalizedCheckIn = checkIn.Date;
-            var normalizedCheckOut = checkOut.Date;
+            Start = start;
+            End = end;
+        }
 
-            if (normalizedCheckOut <= normalizedCheckIn)
-                throw new ArgumentException("CheckOut date must be strictly after CheckIn date.");
+        public static bool TryCreate(DateTime start, DateTime end, out DateRange dateRange)
+        {
+            var normalizedStart = start.Date;
+            var normalizedEnd = end.Date;
 
-            CheckIn = normalizedCheckIn;
-            CheckOut = normalizedCheckOut;
+            if (normalizedEnd <= normalizedStart)
+            {
+                dateRange = null;
+                return false;
+            }
+
+            dateRange = new DateRange(normalizedStart, normalizedEnd);
+            return true;
         }
     }
 }

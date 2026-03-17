@@ -18,7 +18,7 @@ namespace TravelPricingGateway.Core
             var normalizedHotelId = hotelId.Trim();
             var referenceDate = currentDate.Date;
 
-            if (stayPeriod.CheckIn < referenceDate)
+            if (stayPeriod.Start < referenceDate)
                 throw new ArgumentException("CheckIn date cannot be in the past.", nameof(stayPeriod));
 
             HotelId = normalizedHotelId;
